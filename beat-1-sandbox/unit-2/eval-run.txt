@@ -1,0 +1,12 @@
+Replace this file with your unit-2 eval run.
+
+Generate it with `--save-run`: the harness writes this file itself, with
+a header recording the model, the tool it graded, and a fingerprint of
+each file in the run.
+
+    python3 run_eval.py <your flags> --save-run eval-run.txt
+
+A partial `--limit` or `--only` run refuses to write the file, so only a
+complete run can land here. Do not hand-edit it: the story of the runs it
+took belongs in this unit's write-up, in the four fields below it:
+Run history, Package analysis, Check rationale, and Trade-offs.
