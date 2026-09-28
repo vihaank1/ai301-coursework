@@ -1,0 +1,30 @@
+# Rubric: is this reproduction package ready to post?
+
+Six checks, one per proof family plus the claim itself. Every check
+reads the proof against the issue, never the formatting: a terse
+report that shows the issue's behavior passes; a long, confident one
+whose artifact shows something else fails.
+
+## Checks
+
+| Check | Evidence | Pass condition | Weight |
+|---|---|---|---|
+| env-recorded | The repro report's environment record (tool/library version, OS/platform, and any setting the issue names as relevant: driver, build profile, shell, backend, language setting), read against the version and platform the issue targets and any version named in the thread. See evidence guide, Environment. | Pass if the report names the version it ran AND the platform it ran on AND every setting the issue or thread says changes the behavior, and any difference from the issue's target (older/newer version, other OS, other shell) is stated in the report itself. Fail if there is no environment record, if a behavior-relevant setting is missing, or if the tested version/platform differs from the issue's target without the report saying so. Deviation means a different release of the software the issue is about, or a different platform when the issue or thread ties the bug to a platform (a different distribution of the same OS family is not a deviation); dependency versions and thread remarks about related upstream fixes do not create a deviation, and the report need not explain why the bug still exists. | required |
+| steps-rerunnable | The repro report's steps and inputs (commands, code, config, input files), read against the issue's own trigger (the input, flag, syntax, or setting the issue says causes the bug). See evidence guide, Steps. | Pass if a stranger with only public resources could re-run the attempt from a clean start: the exact commands or code and the exact input are given or unambiguously the issue's own, and the issue's trigger condition is present in them. An input described precisely enough to rebuild it (its exact contents named, even without the literal file) counts as given. Fail if any step depends on private code, unshared config, or files the reader cannot get or rebuild; if a step is vague ("set up the project", "run it"); or if the trigger the issue names is missing or changed. | required |
+| behavior-matches-issue | The artifacts in the repro report (output excerpts, tracebacks, exit codes, logs, rendered output), read against the specific behavior the issue describes (its error type/message, exit code, wrong value, crash vs. graceful error). See evidence guide, Behavior shown. | Pass if an artifact is shown and it displays the same behavior the issue describes, produced by the issue's trigger (same error kind, same wrong output, same crash class), OR the report is an honest cannot-reproduce whose artifact shows what the faithful attempt actually produced. Fail if there is no artifact; if the artifact shows only that the software runs; or if it shows a different, adjacent behavior (a graceful validation error or compile error where the issue reports a crash or runtime error, a different version's behavior, a garbled-but-alive terminal where the issue reports a crash). | required |
+| outcome-honest | Every claim in the claim comment and the repro report ("reproduced", "confirmed", "verified", root-cause statements, "guaranteed", scope generalizations, stated expected/actual), read against the artifacts actually shown. See evidence guide, Honesty. | Pass if every claim is backed by a shown artifact and says no more than the artifact shows: "Actual" describes what the artifact displays; any cause is framed as a hypothesis unless evidence is shown; a cannot-reproduce names what was tried and what differed. Fail if the package claims a reproduction, diagnosis, root cause, or scope (other versions, other platforms, "always") that no shown artifact supports, or narrates an artifact as something it does not show. The central claim (that the issue's behavior was, or was not, reproduced) needs a shown artifact; a secondary observation stated in prose (a control run, a side note) that is consistent with the shown artifacts does not fail this check on its own. | required |
+| claim-specific | The claim comment, read against the issue's title, body, and thread. See evidence guide, Comms. | Pass if the claim names something specific to this issue (the symptom, input, component, file, or function) that could not be pasted onto another issue unchanged, AND states a concrete next step, AND promises only investigation or a report (no fix deadline, no guarantee, no request to reserve the issue for them). Fail if it is a +1/me-too, interchangeable boilerplate, or promises a fix, a date, or a guarantee. | required |
+| conventions-disclosure | The repo-facts block's contribution policy (CONTRIBUTING / AI policy text), read against the claim comment and repro report. Treat every package as AI-assisted work. See evidence guide, Comms. | Pass if the stated policy has no AI-disclosure requirement that covers issue comments, OR the comments contain an explicit disclosure of AI assistance meeting that requirement. A policy that only requires disclosure in pull requests, or only asks that comments be in the contributor's own words, does not require disclosure in comments. Fail if the policy requires disclosure of AI use in comments or "in any form" and neither comment discloses. | required |
+
+## Verdict rule
+
+accept if every required check passes; otherwise reject. There are no
+preferred checks, so every row can hold a package. `unclear` counts as
+fail, with one exception: in live mode on a claim-only draft,
+env-recorded, steps-rerunnable, and behavior-matches-issue are graded
+`unclear` with evidence `not yet applicable: claim-only draft` and are
+left out of the verdict; outcome-honest, claim-specific, and
+conventions-disclosure are graded on the claim comment alone. On a
+claim-only draft, outcome-honest fails if the claim asserts a
+reproduction or a cause, because no report backs it yet: a claim
+posted before reproducing promises, it does not assert.
