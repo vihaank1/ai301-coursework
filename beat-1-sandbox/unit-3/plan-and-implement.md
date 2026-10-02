@@ -15,17 +15,29 @@ label is not graded.
 
 **GitHub username**
 
-[Your GitHub username, exactly as it appears on your profile - no @, no
-profile URL. Your comment upstream is identified by this name, and it is
-the only thing that ties it to you. Several students may plan the same
-house issue, so this is what keeps their comments off your score and
-yours off theirs.]
+vihaank1
 
 **Plan comment**
 
-[Link to the comment where you posted your plan on the issue. Use the comment's own
-permalink. **Then paste the text of that comment underneath the link** — the pasted text is
-what this field is graded on, so copy across what you actually posted.]
+TODO-PASTE-PLAN-COMMENT-PERMALINK
+
+Plan for #53, built from my own reproduction.
+
+My repro on `main` @ `2f4e82f`: `scrub('Call me at (555) 123-4567 or 555-123-4567')` returns `'Call me at (555) 123-4567 or [REDACTED]'`, `detect()` returns `[]` for the parenthesized number but finds `555-123-4567`, and the four tests named in the issue fail with `--runxfail` (`4 failed`).
+
+**Diagnosis:** the `phone_us` pattern (`safety/pii_scrubber.py` line 16) has two gaps. Its separators are `[-.]?`, so the space after `)` isn't allowed. It also starts with `\b` before the optional `\(`, and a word boundary can't fall between a space and `(`, so the `(` can never start a match. I get the same separator reading others posted here, plus the `\b` part.
+
+**Change (one regex, plus markers):**
+- Replace the leading `\b` with `(?<!\w)` and widen the separators to `[-.\s]?`.
+- Remove the `xfail` markers from `test_us_phone_number_redaction`, `test_us_phone_formats`, `test_detect_phone_pii` and `test_phone_at_start_of_text`, as CONTRIBUTING.md asks for seeded bugs.
+
+**Not in scope:** `test_mixed_pii_and_text`. As Shimmy0530 showed above, it fails because `street_address` matches `5 years developing Python appl`, not because of the phone pattern. Its marker stays, and I'd treat it as a separate fix unless a maintainer wants it folded in here. No other patterns change.
+
+**Test:** re-run the repro snippet and expect `'Call me at [REDACTED] or [REDACTED]'`, with `detect()` returning a `phone_us` match for `(555) 123-4567` (the dashed control unchanged). The four tests go from `4 failed` to `4 passed` with their markers removed. Then the full `test_pii_scrubber.py` should pass, with only `test_mixed_pii_and_text` still xfailed, and `make check && make test-unit` should pass.
+
+**Risk:** allowing a space separator could flag spaced digit runs in non-phone text. I'm relying on `test_detect_no_false_positives` and the SSN tests to catch regressions, and I haven't tested a larger text sample.
+
+AI disclosure: I used Claude (an AI assistant) to help read the regex, draft this plan, and check it against the tests. I reviewed and edited the plan myself before posting.
 
 ---
 
@@ -33,15 +45,44 @@ what this field is graded on, so copy across what you actually posted.]
 
 **Branch**
 
-[The name of the branch you built the change on, exactly as it appears in your fork. The
-naming shape is a type prefix, then the issue number, then a short description. **The issue
-number in the branch name must be the number of the issue you claimed** — a name carrying
-any other number does not satisfy this field.]
+fix/53-parenthesized-phone-redaction
 
 **Evidence**
 
-[Your Unit 2 reproduction steps re-run against the built change: the before, then the
-after. Paste both, including the commands you ran and their output.]
+```
+=== BEFORE (main @ 2f4e82f) ===
+$ python -c "<repro snippet>"
+'Call me at (555) 123-4567 or [REDACTED]'
+2026-10-02 18:17:36 [info     ] pii_detected                   count=0 types=0
+[]
+2026-10-02 18:17:36 [info     ] pii_detected                   count=1 types=1
+[{'type': 'phone_us', 'value': '555-123-4567', 'start': 11, 'end': 23}]
+$ pytest tests/unit/test_pii_scrubber.py -k "us_phone_number_redaction or us_phone_formats or detect_phone_pii or phone_at_start_of_text" --runxfail -q
+E       AssertionError: assert '[REDACTED]' in 'Call me at (555) 123-4567'
+E           AssertionError: assert '[REDACTED]' in 'Contact: (555) 123-4567'
+E       assert 0 > 0
+E        +  where 0 = len([])
+E       AssertionError: assert '[REDACTED]' in '(555) 123-4567 is my phone number.'
+FAILED tests/unit/test_pii_scrubber.py::TestPIIScrubber::test_us_phone_number_redaction
+FAILED tests/unit/test_pii_scrubber.py::TestPIIScrubber::test_us_phone_formats
+FAILED tests/unit/test_pii_scrubber.py::TestPIIScrubber::test_detect_phone_pii
+FAILED tests/unit/test_pii_scrubber.py::TestPIIScrubber::test_phone_at_start_of_text
+4 failed, 21 deselected in 0.08s
+$ pytest tests/unit/test_pii_scrubber.py -q
+20 passed, 5 xfailed in 0.05s
+```
+
+```
+=== AFTER (branch fix/53-parenthesized-phone-redaction) ===
+$ python -c "<repro snippet>"
+'Call me at [REDACTED] or [REDACTED]'
+[{'type': 'phone_us', 'value': '(555) 123-4567', 'start': 11, 'end': 25}]
+[{'type': 'phone_us', 'value': '555-123-4567', 'start': 11, 'end': 23}]
+$ pytest tests/unit/test_pii_scrubber.py -k "us_phone_number_redaction or us_phone_formats or detect_phone_pii or phone_at_start_of_text" -q
+4 passed, 21 deselected in 0.04s
+$ pytest tests/unit/test_pii_scrubber.py -q
+24 passed, 1 xfailed in 0.05s
+```
 
 ## Eval iterations
 
