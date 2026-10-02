@@ -19,7 +19,7 @@ vihaank1
 
 **Plan comment**
 
-TODO-PASTE-PLAN-COMMENT-PERMALINK
+https://github.com/codepath/pathreview-ai301-fa26-s3/issues/53#issuecomment-5962580173
 
 Plan for #53, built from my own reproduction.
 
