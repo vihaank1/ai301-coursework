@@ -91,28 +91,21 @@ fields.
 
 **Run history**
 
-[The agreement score of each run you did, in order. A single run is a complete answer if
-only one run occurred. **The last score in your list must match the agreement line in the
-`eval-run.txt` you committed** — that file is the record of your final run.]
+1. Full run, saved with `--save-run eval-run.txt`: 19/20 scored items (bar: 18/20: PASS), categories clear-accept 6/7, scope-creep 4/4, thread-convention 2/2, unbuildable 3/3, wrong-cause 4/4. The only disagreement was pkg-14 (gold accept, graded reject on executable-approach). Since this run already cleared the bar and the category floor, I kept it as my final run instead of loosening a check to chase pkg-14.
 
 **Package analysis**
 
-[Pick one scored package (`pkg-01` through `pkg-20` — the four `calib-` packages are never
-scored). Name it by id, say what your rubric decided and what the gold label said, and
-explain why your rubric read it that way.]
+pkg-14 (zellij-org/zellij#5174). Gold: accept. My rubric: reject, failed on executable-approach. The plan's diagnosis is grounded (fresh attach is clean, the leak starts at reattach, 0.44.1 is clean), the scope is bounded to the Unix reattach handshake with the Windows variant deferred and explained, and the test plan is decisive (5 SSH reattach cycles with no rgb strings in any pane). The problem for my rubric is the Files section: it names the attach/reattach path in `zellij-server` and the query issuance in `zellij-client`, but says "exact functions to be pinned in the PR after tracing the query issuance with debug logs." My pass condition fails a plan when "key decisions are deferred to build time," and the grader read "exact functions to be pinned in the PR" as exactly that. The gold label reads it as ready: the change itself is chosen (drain OSC query responses before pane input is wired, bounded to OSC patterns), and only the precise function name is left to trace. I think gold is right, because a stranger could start from the named crate and code path, and the plan isn't deferring a decision about what to do, only which line it lands on. My check doesn't separate "deferring the decision" from "deferring the exact line number" well enough.
 
 **Check rationale**
 
-[Quote one check from the `rubric.md` you uploaded to `tools/plan-check/`, exactly as it reads now.
-Then say why it reads that way — what you revised to get there, or what you rejected in
-favour of it.]
+| executable-approach | The plan's approach: named files, functions, or code sites, and the chosen change. | Pass if a stranger could start the edit without asking the author anything: at least one concrete file, function, or code site is named AND one specific change is chosen. Fail if the location is "somewhere", the layer is undecided ("X or Y, whichever is easier", "not sure"), the work is "investigate/profile first", or key decisions are deferred to build time. | required |
+
+It reads this way because the unbuildable packages all fail the same way: they never commit to where or what. pkg-18 says recover() "somewhere" and "upstream or vendored, whichever is easier," pkg-17 says "gocui? tcell? not sure," and pkg-10 is profile-and-optimize with no files. So the pass condition needs two things together: a concrete location AND one chosen change, and the fail list names those exact dodges ("somewhere", "X or Y, whichever is easier", "investigate/profile first"). I rejected a looser version that only asked for "a named file or area," because pkg-17 and pkg-18 both name an area (an input stack, a linter runner) and would have passed. I also rejected counting sections or requiring a "Files:" heading, because calib-01 is terse with one named file and is ready, so the check has to judge whether a stranger could start, not how the plan is laid out.
 
 **Trade-offs**
 
-[Every check gives something up. Any one of these is a complete answer: a package whose
-result it changes, a canary you re-ran with `--only`, a case you accept it will miss, or a
-stated reason nothing changed elsewhere. "Nothing changed, and here is how I know" earns
-the point in full when the reason follows.]
+executable-approach gives up pkg-14. Its clause "key decisions are deferred to build time" is what catches pkg-18, where every real decision (where to recover, upstream or vendored, which other linters) is pushed to the build. But the same clause also catches a good plan that has chosen its change and only leaves the exact function to be pinned by tracing, which is pkg-14 (gold accept, my verdict reject). I could loosen it to "deferring the exact function is fine if the file/module and the change are chosen," but that risks letting pkg-17 or pkg-18 through, since they also gesture at a module, and with this run already at 19/20 with every category matched I chose not to spend another full run on it. The case I accept it will miss: an honest, grounded plan whose author says "I'll pin the exact function after tracing" will be held even when a maintainer would happily let them start.
 
 ---
 

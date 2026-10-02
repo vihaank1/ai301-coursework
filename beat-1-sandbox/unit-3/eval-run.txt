@@ -1,12 +1,55 @@
-Replace this file with your unit-3 eval run.
+# eval run written by run_eval.py at 2026-10-02T22:30:11Z
+# model: sonnet (pinned)
+# graded: /root/.claude/skills/plan-check
+# packages: 20 scored
+#   rubric.md  sha256:2f7715dd25571243
+#   evidence-guide.md  sha256:f9006a91e45e74df
+#   procedure.md  sha256:6d1bfe586fd3b292
+#   SKILL.md  sha256:4688d0d0f4cf6cb3
+#
+grading 20 package(s) with rubric.md + evidence-guide.md + procedure.md, model sonnet, 10 worker(s)...
+  pkg-01: reject
+  pkg-10: reject
+  pkg-05: accept
+  pkg-07: reject
+  pkg-08: accept
+  pkg-09: accept
+  pkg-02: accept
+  pkg-03: accept
+  pkg-04: reject
+  pkg-06: reject
+  pkg-11: reject
+  pkg-13: accept
+  pkg-15: reject
+  pkg-12: reject
+  pkg-17: reject
+  pkg-19: reject
+  pkg-14: reject
+  pkg-20: reject
+  pkg-16: reject
+  pkg-18: reject
 
-Generate it with `--save-run`: the harness writes this file itself, with
-a header recording the model, the tool it graded, and a fingerprint of
-each file in the run.
+item    category           gold    verdict  agree  note
+pkg-01  wrong-cause        reject  reject   yes    
+pkg-02  clear-accept       accept  accept   yes    
+pkg-03  clear-accept       accept  accept   yes    
+pkg-04  thread-convention  reject  reject   yes    
+pkg-05  clear-accept       accept  accept   yes    
+pkg-06  scope-creep        reject  reject   yes    
+pkg-07  wrong-cause        reject  reject   yes    
+pkg-08  clear-accept       accept  accept   yes    
+pkg-09  clear-accept       accept  accept   yes    
+pkg-10  unbuildable        reject  reject   yes    
+pkg-11  wrong-cause        reject  reject   yes    
+pkg-12  scope-creep        reject  reject   yes    
+pkg-13  clear-accept       accept  accept   yes    
+pkg-14  clear-accept       accept  reject   NO     failed: executable-approach
+pkg-15  scope-creep        reject  reject   yes    
+pkg-16  wrong-cause        reject  reject   yes    
+pkg-17  unbuildable        reject  reject   yes    
+pkg-18  unbuildable        reject  reject   yes    
+pkg-19  scope-creep        reject  reject   yes    
+pkg-20  thread-convention  reject  reject   yes    
 
-    python3 run_eval.py <your flags> --save-run eval-run.txt
-
-A partial `--limit` or `--only` run refuses to write the file, so only a
-complete run can land here. Do not hand-edit it: the story of the runs it
-took belongs in this unit's write-up, in the four fields below it:
-Run history, Package analysis, Check rationale, and Trade-offs.
+categories: clear-accept 6/7  scope-creep 4/4  thread-convention 2/2  unbuildable 3/3  wrong-cause 4/4
+agreement: 19/20 scored items  (bar: 18/20: PASS)
