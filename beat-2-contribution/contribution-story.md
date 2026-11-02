@@ -55,10 +55,9 @@ happened; these entries are the toolkit's own timeline.
 All four entries are graded. Keep every heading below, and fill each
 one in the week it belongs to.
 
-**Unit 5: [one line on the tool work]**
+**Unit 5: Installed the issue-scout and wrote a Python-focused search strategy, but the graded scan never ran**
 
-[2-4 sentences: what you built (the scout, your strategy), what broke
-or fell short, what changed because of it.]
+I installed the issue-scout over my Unit 1 skill, wrote a fit profile (Python, AI/ML or developer tooling, small well-scoped work) and three `gh search issues` queries with ranking filters that drop assigned, stale and long-thread results. The first thing that broke was setup: my first read of `scope.md` and `search-strategy.md` showed both were still blank templates, so a scan would have had nothing of mine to run, and I fixed that with a small script that filled both files. The second was the scan itself, which stopped with "Login expired" under a paid API account instead of my course credit, so I never got graded verdicts. Instead I ran my first query by hand with `gh`, shortlisted from those results, and claimed three Python issues (WrenAI, CodeGraphContext, CTSM) on the Issue Selection site; I'm asking in the tech-help channel how to log in with my course credit so I can run the scan and grade my picks.
 
 **Unit 6: [one line on the tool work]**
 
