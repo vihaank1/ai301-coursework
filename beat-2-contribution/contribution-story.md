@@ -120,7 +120,7 @@ CI only: the `.github/workflows/` directory (16 workflow files on `master` today
 
 **Environment Setup**
 
-macOS 15.6.1 on a MacBook Air, git 2.39.5 (Apple Git-154), Python 3.12.7. I forked ESCOMP/CTSM to `vihaank1/CTSM`, cloned my fork to `~/Documents/CTSM` and used `master` as the base. This is a CI-only change, so nothing needs building or running locally. Two challenges: my first clones into `~/Documents` left partial `.git` folders, which I deleted and re-cloned; and my repro script's first run failed at its branch step ("fatal: a branch named 'whitespace-repro' already exists"), so that run happened on my fix branch and its "workflow found" result was wrong. I noticed because the output listed my own `whitespace-check.yml`, cleaned up the stray line it added, and reran on the right branch (below).
+macOS 15.6.1 on a MacBook Air, git 2.39.5 (Apple Git-154), Python 3.12.7. I forked ESCOMP/CTSM to `vihaank1/CTSM`, cloned my fork to `~/Documents/CTSM` and used `master` as the base. This is a CI-only change, so nothing needs building or running locally. Two challenges: my first clones into `~/Documents` left partial `.git` folders, which I deleted and re-cloned; and my repro script's first run failed at its branch step ("fatal: a branch named 'whitespace-repro' already exists"), so that run happened on my fix branch and its "workflow found" result was wrong. I noticed because the output listed my own `whitespace-check.yml`, removed what it had left on my fix branch (a stray line and a local-only commit that I never pushed, so PR #4309 was not affected), and reran on the right branch (below).
 
 **Steps to Reproduce**
 
@@ -184,7 +184,7 @@ One new workflow, `.github/workflows/whitespace-check.yml`, that runs on pull re
 2. Run the same command locally for three cases: clean branch, one added trailing space, same line in a `.py` file.
 3. Run the workflow on two throwaway PRs in my fork (one clean, one with a trailing space).
 
-Deviations: my claim said I would first post a small script and its output by Nov 15; I went straight to the workflow instead. The PR description does not mention that change from my claim, so I am adding a short note on the issue with the PR link (drafted in `issue-update.md`, and it goes through the voice guard). I also opened the PR before a maintainer answered my question about whether to build this standalone or wait for #1768; the PR description says that question is open.
+Deviations: my claim said I would first post a small script and its output by Nov 15; I went straight to the workflow instead. The PR description does not mention that change from my claim, so I posted a short note on the issue with the PR link (https://github.com/ESCOMP/CTSM/issues/2313#issuecomment-6728926356, sent through Claude Code so the voice guard checked it). I also opened the PR before a maintainer answered my question about whether to build this standalone or wait for #1768; the PR description says that question is open.
 
 **Toolkit**
 
