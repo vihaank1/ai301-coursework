@@ -7,10 +7,10 @@ the repository is not read. **Keep every section header below under its exact na
 format criteria grade exactly that. Your course repo link is the whole submission: no tool
 files and no evidence uploads are part of Assignment 5.
 
-**Contribution Number:** [1]
-**Student:** Vihaan
-**GitHub Username:** vihaank1
-**Issue:** https://github.com/ESCOMP/CTSM/issues/2313
+**Contribution Number:** [1]  
+**Student:** Vihaan  
+**GitHub Username:** vihaank1  
+**Issue:** https://github.com/ESCOMP/CTSM/issues/2313  
 **Pull Request:** https://github.com/ESCOMP/CTSM/pull/4309
 
 One repository, built across units 5 to 8, telling the whole story of your real
